@@ -87,19 +87,49 @@ class DoubleLinkedList(Node):
         elif index >= self.__size-1:
             ## add object at end of list
             self.add_last(v)
-        elif index > 0 and index  < self.__size-1:
+        elif index > 0 and index < self.__size-1:
             ## add object where specified by index
-            return
+            mid = self.__size //2
+            if index <= mid:
+                ## Traverse normal
+                n = Node(v)
+                poi = self.__firstNode
+                for x in range(index-2):
+                    poi = poi.get_next()
+                old_next = poi.get_next()
+                n.set_previous(poi)
+                n.set_next(old_next)
+                old_next.set_previous(n)
+                poi.set_next(n)
+                self.__size += 1
+            else:
+                ## Traverse reverse
+                n = Node(v)
+                poi = self.__lastNode
+                for x in range(self.__size-index-1):
+                    poi = poi.get_previous()
+                old_prev = poi.get_previous()
+                n.set_previous(old_prev)
+                n.set_next(poi)
+                poi.set_previous(n)
+                old_prev.set_next(n)
+                self.__size += 1
         else:
             return False
 
     def get_first(self):
         """ Get the first item in object. """
-        return self.__firstNode
+        if self.__firstNode != None:
+            return self.__firstNode.get_value()
+        else:
+            return self.__firstNode
 
     def get_last(self):
         """ Return the last item in object. """
-        return self.__lastNode
+        if self.__lastNode != None:
+            return self.__lastNode.get_value()
+        else:
+            return self.__lasstNode
 
     def get(self, index):
         """ Return an element anywhere in the DoubleLinkedList object, index starts at 0. """
@@ -111,7 +141,19 @@ class DoubleLinkedList(Node):
             return self.get_last()
         elif index > 0 and index  < self.__size-1:
             ## return object where specified by index
-            return
+            mid = self.__size //2
+            if index <= mid:
+                ## Traverse normal
+                poi = self.__firstNode
+                for x in range(index):
+                    poi = poi.get_next()
+                return poi.get_value()
+            else:
+                ## Traverse reverse
+                poi = self.__lastNode
+                for x in range(self.__size-index):
+                    poi = poi.get_previous()
+                return poi.get_value()
         else:
             return False
 
@@ -173,14 +215,26 @@ class DoubleLinkedList(Node):
         else:
             return False
 
-
     def __str__(self):
         """ return the entire list as a list. """
-        return
+        if self.__size == 0:
+            return '[]'
+        elif self.__size == 1:
+            return '[' + str(self.__firstNode.get_value()) + ']'
+        else:
+            lst = []
+            poi = self.__firstNode
+            for x in range(self.__size):
+                lst.append(poi.get_value())
+                poi = poi.get_next()
+            return '['+', '.join(lst)+']'
+
 
 
 ## Testing
+#"""
 t = DoubleLinkedList()
+"""
 t.add_first('test1')
 print(t.get_first().get_all(), t.get_last().get_all())
 print(t.get_size())
@@ -205,3 +259,26 @@ print(t.delete_last())
 print(t.get_first(), t.get_last())
 print(t.get_size())
 print()
+
+"""
+print(t)
+t.add_first('2')
+t.add_first('1')
+t.add_last('3')
+print(t.get_last(), t.get_size(), '\n',t.get(0), t.get(1), t.get(2))
+print(t)
+#t.add_last('4')
+#print(t)
+
+"""
+print(t.get(0))
+print(t.get(1))
+print(t.get(2))
+print(t.get(3))
+print(t)
+print()
+#t.add('test_A', 1)
+#t.add('test_B', 2)
+print(t)
+
+"""
