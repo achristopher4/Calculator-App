@@ -84,10 +84,10 @@ class DoubleLinkedList(Node):
         if self.__size == 0 or index == 0:
             ## add object at front of list
             self.add_first(v)
-        elif index >= self.__size-1:
+        elif index >= self.__size:
             ## add object at end of list
             self.add_last(v)
-        elif index > 0 and index < self.__size-1:
+        elif index > 0 and index <= self.__size-1:
             ## add object where specified by index
             mid = self.__size //2
             if index <= mid:
@@ -136,13 +136,13 @@ class DoubleLinkedList(Node):
         if self.__size == 0 or index == 0:
             ## return object at front of list
             return self.get_first()
-        elif index >= self.__size-1:
+        elif index >= self.__size:
             ## return object at end of list
             return self.get_last()
-        elif index > 0 and index  < self.__size-1:
+        elif index > 0 and index <= self.__size-1:
             ## return object where specified by index
             mid = self.__size //2
-            if index <= mid:
+            if index < mid:
                 ## Traverse normal
                 poi = self.__firstNode
                 for x in range(index):
@@ -151,7 +151,7 @@ class DoubleLinkedList(Node):
             else:
                 ## Traverse reverse
                 poi = self.__lastNode
-                for x in range(self.__size-index):
+                for x in range(self.__size-index-1):
                     poi = poi.get_previous()
                 return poi.get_value()
         else:
@@ -179,6 +179,7 @@ class DoubleLinkedList(Node):
             next.set_previous = None
             self.__firstNode = next
             self.__size -= 1
+            current.set_next(None)
             return current.get_value()
 
     def delete_last(self):
@@ -199,19 +200,46 @@ class DoubleLinkedList(Node):
             prev.set_next = None
             self.__lastNode = prev
             self.__size -= 1
+            current.set_previous(None)
             return current.get_value()
 
     def delete(self, index):
         """ Return an element anywhere in the DoubleLinkedList object, index starts at 0. """
         if self.__size == 0 or index == 0:
             ## delete object at front of list
-            self.delete_first()
+            return self.delete_first()
         elif index >= self.__size-1:
             ## delete object at end of list
-            self.delete_last()
-        elif index > 0 and index  < self.__size-1:
+            return self.delete_last()
+        elif index > 0 and index <= self.__size-1:
             ## delete object where specified by index
-            return
+            mid = self.__size //2
+            if index <= mid:
+                ## Traverse normal
+                poi = self.__firstNode
+                for x in range(index):
+                    poi = poi.get_next()
+                prev = poi.get_previous()
+                next = poi.get_next()
+                poi.set_previous(None)
+                poi.set_next(None)
+                prev.set_next(next)
+                next.set_previous(prev)
+                self.__size -= 1
+                return poi.get_value()
+            else:
+                ## Traverse reverse
+                poi = self.__lastNode
+                for x in range(self.__size - index):
+                    poi = poi.get_previous()
+                prev = poi.get_previous()
+                next = poi.get_next()
+                poi.set_previous(None)
+                poi.set_next(None)
+                prev.set_next(next)
+                next.set_previous(prev)
+                self.__size -= 1
+                return poi.get_value()
         else:
             return False
 
@@ -225,60 +253,64 @@ class DoubleLinkedList(Node):
             lst = []
             poi = self.__firstNode
             for x in range(self.__size):
-                lst.append(poi.get_value())
+                lst.append(str(poi.get_value()))
                 poi = poi.get_next()
-            return '['+', '.join(lst)+']'
+            return '[' + ', '.join(lst) +']'
 
 
-
+"""
 ## Testing
-#"""
 t = DoubleLinkedList()
-"""
-t.add_first('test1')
-print(t.get_first().get_all(), t.get_last().get_all())
-print(t.get_size())
-print(t.delete_first())
-print(t.get_first(), t.get_last())
-print(t.get_size())
-print()
 
-t.add_last('test2')
-print(t.get_first().get_all(), t.get_last().get_all())
-print(t.get_size())
-print(t.delete_last())
-print(t.get_first(), t.get_last())
-print(t.get_size())
-print()
-
-t.add_first('test1')
-t.add_last('test2')
-print(t.get_first().get_all(), t.get_last().get_all())
-print(t.get_size())
-print(t.delete_last())
-print(t.get_first(), t.get_last())
-print(t.get_size())
-print()
-
-"""
+print(t)
+t.add(0, 23432)
 print(t)
 t.add_first('2')
+print(t)
+t.add('TEST', 1)
+print(t)
+print()
+
 t.add_first('1')
 t.add_last('3')
-print(t.get_last(), t.get_size(), '\n',t.get(0), t.get(1), t.get(2))
 print(t)
-#t.add_last('4')
-#print(t)
+t.add_last('4')
+print(t)
+print()
 
-"""
+print(t.get_first())
+print(t.get_last())
+print()
+
 print(t.get(0))
 print(t.get(1))
 print(t.get(2))
 print(t.get(3))
 print(t)
 print()
-#t.add('test_A', 1)
-#t.add('test_B', 2)
-print(t)
 
+t.add('test_A', 1)
+print(t)
+t.add('test_B', 2)
+print(t)
+print()
+
+print(t.delete_first())
+print(t)
+print(t.delete_last())
+print(t)
+print(t.delete(2))
+print(t)
+print(t.delete(2))
+print(t)
+print(t.delete(1))
+print(t)
+print()
+
+print(t.delete(0))
+print(t)
+print(t.delete(1))
+print(t)
+print(t.delete(234))
+print(t)
 """
